@@ -1,20 +1,33 @@
 ```mermaid
 graph TD
+  subgraph ReactFramework
+    State[State: history & currentMove]
+  end
+
   Game["Game Component"]
-  State["React State (history, trackCurrentMove)"]
   Board["Board Component"]
   Square["Square Component"]
-  Winner["calculateWinner Function"]
+  CalculateWinner["calculateWinner Function"]
 
-  Game -->|Initializes| State
-  Game -->|Passes Props| Board[xIsNext, currentSquares, onPlay]
-  State -->|Provides State| Game
+  %% Game Initialization
+  ReactFramework -->|Initializes| Game
+  Game -->|Manages State| State
 
-  Board -->|Passes Props| Square[value, onSquareClick]
-  Board -->|Calls| Winner
-  Winner -->|Returns| WinningStatus
-  Board -->|Updates| State
+  %% Data Flow
+  Game -->|Passes Props: xIsNext, currentSquares, onPlay| Board
+  Board -->|Renders Multiple| Square
+  Square -->|Triggers| Board
+
+  %% Winner Calculation
+  Board -->|Calls| CalculateWinner
+  CalculateWinner -->|Returns Winner| Board
+
+  %% State Updates
+  Board -->|Invokes| Game.HandlePlay
+  Game.HandlePlay -->|Updates State| State
   State -->|Triggers Re-render| Game
-  Game -->|Re-renders| Board
-  Board -->|Re-renders| Square
+
+  %% Moves List
+  Game -->|Generates Move List| Game.JumpTo
+  Game.JumpTo -->|Updates| State
 ```

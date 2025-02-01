@@ -5,6 +5,7 @@ Debouncing is a technique used to control how often a function executes. It ensu
 Imagine typing in a search box that fetches results from an API. If each keystroke triggers a request, typing a simple word like “apple” could result in five API calls (one for each letter). This wastes bandwidth, increases server load, and can slow down performance.
 With debounce, the function waits until the user has stopped typing for a set period (e.g., 500ms) before making a request. This ensures that only one API call is made, optimizing performance.
 
+
 #### Code Breakdown?
 ```javascript
 const debounce = (cb, delay = 1000) => {
@@ -16,6 +17,17 @@ const debounce = (cb, delay = 1000) => {
         }, delay)
     }
 }
+const fetchApiData = async (query) => {
+    try {
+        const response = await fetch(`https://jsonplaceholder.typicode.com/posts?q=${query}`)
+        const data = await response.json()
+        apiResponse.textContent = JSON.stringify(data, null, 2)
+    } catch (error) {
+        apiResponse.textContent = 'Error fetching data'
+    }
+}
+
+const debouncedFetch = debounce(fetchApiData, 1000)
 ```
 
 1. setTimeout()
@@ -26,9 +38,18 @@ const debounce = (cb, delay = 1000) => {
 	•	It resets the timer if the function is called again before setTimeout executes.
 	•	This prevents unnecessary function calls when rapid events occur (e.g., multiple keypresses).
 
+3. debouncedFetch = debounce(fetchApiData, 1000)
+	•	Wraps fetchApiData in the debounce function (debouncedFetch), delaying API requests until the user stops typing.
+	•	Each keystroke resets the debounce timer, ensuring only one API call is made per input session.
+
 
 Debounce ensures that your function only runs after a period of inactivity, preventing unnecessary executions. It works by continuously resetting a timer (clearTimeout) until the function has not been called for the defined delay (setTimeout). This simple yet powerful technique reduces redundant actions and improves application performance.
 
+How This Improves Performance
+
+✅ Prevents Excess API Requests: Instead of making multiple API calls for each keystroke, it waits until the user stops typing.
+✅ Enhances User Experience: Reduces unnecessary loading states, ensuring smoother UI updates.
+✅ Efficient Resource Utilization: Minimizes network requests, reducing bandwidth and server load.
 
 ###### Example: Debounce in a Search Box
 

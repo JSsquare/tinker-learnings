@@ -20,3 +20,5 @@ Imagine your mom telling you to clean your room. Every time she reminds you, you
 
 
 What is Throttle?
+Now imagine you have a cookie jar, but your mom only allows you to take one cookie every 5 minutes, no matter how many times you try.
+Throttle works similarly—it allows a function to run immediately but then prevents it from running again until the delay is over. This ensures the function doesn’t run too frequently within a short period. 
